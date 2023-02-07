@@ -25,7 +25,7 @@ type Dispatch = (action: Actions) => void
 
 const GameContext = createContext<{ state: State; dispatch: Dispatch } | undefined>(undefined)
 
-function gameReducer(state: State, action: Actions) {
+function gameReducer(state: State, action: Actions): any {
   switch (action.type) {
     case 'setWord': {
       return {

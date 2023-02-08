@@ -1,5 +1,6 @@
 :root {
   line-height: 1.5;
+  font-family: 'Roboto', sans-serif;
   font-weight: 400;
   color-scheme: dark;
   color: rgba(255, 255, 255, 1);
@@ -9,6 +10,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 a {
@@ -25,7 +30,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 320px;
+  min-width: 300px;
   width: 100vw;
   min-height: 100vh;
 }

@@ -78,3 +78,12 @@
 .return img {
   height: 30px;
 }
+
+@media screen and (max-width: 600px) {
+  .guessGrid {
+    min-width: 100%;
+  }
+  .keyboardGrid {
+    min-width: 100%;
+  }
+}

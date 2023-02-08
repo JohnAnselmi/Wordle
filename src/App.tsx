@@ -24,13 +24,21 @@ function App() {
     console.log('word is', state.theWord)
   }, [state.theWord])
 
+  useEffect(() => {
+    if (state.error) {
+      setTimeout(() => {
+        dispatch({ type: 'clearError' })
+      }, 4000)
+    }
+  }, [state.error])
+
   return loading ? (
     <Loading />
   ) : (
     <main>
-      <div className="helper" onClick={() => console.log(state)}>
+      {/* <div className="helper" onClick={() => console.log(state)}>
         <p>Log State</p>
-      </div>
+      </div> */}
       <Guesses />
       <Keyboard />
       {(state.error || state.status === 'won') && (

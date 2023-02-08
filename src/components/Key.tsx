@@ -3,7 +3,7 @@ import { useGame } from '../context/Context'
 
 export default function Key({ letter, onClick }: { letter: string; onClick: (letter: string) => void }) {
   const [display, setDisplay] = useState(letter)
-  const [letterStatus, setLetterStatus] = useState('')
+  const [letterStatus, setLetterStatus] = useState('default')
   const { state } = useGame()
 
   useEffect(() => {
@@ -15,16 +15,17 @@ export default function Key({ letter, onClick }: { letter: string; onClick: (let
   }, [letter])
 
   useEffect(() => {
-    if (state.wrongLetters.includes(letter)) {
-      setLetterStatus('wrong')
-    }
-    if (state.closeLetters.includes(letter)) {
-      setLetterStatus('close')
-    }
+    console.log('changed letter status')
     if (state.correctLetters.includes(letter)) {
       setLetterStatus('correct')
+    } else if (state.closeLetters.includes(letter)) {
+      setLetterStatus('close')
+    } else if (state.wrongLetters.includes(letter)) {
+      setLetterStatus('wrong')
+    } else {
+      setLetterStatus('default')
     }
-  }, [state.wrongLetters, state.correctLetters, state.closeLetters, letter])
+  }, [state, letter])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,14 +39,12 @@ export default function Key({ letter, onClick }: { letter: string; onClick: (let
     }
   }, [letter, onClick])
 
-  return (
+  return letterStatus ? (
     <div
-      onClick={() => {
-        letterStatus === 'wrong' ? null : onClick(letter)
-      }}
+      onClick={() => onClick(letter)}
       className={`key ${letter === 'backspace' || letter === 'return' ? 'doubleSpan' : ''} ${letterStatus}`}
     >
       {display}
     </div>
-  )
+  ) : null
 }

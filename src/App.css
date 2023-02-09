@@ -1,5 +1,4 @@
 .guessGrid {
-  min-width: 400px;
 }
 
 .guess {
@@ -39,7 +38,6 @@
 
 .keyboardGrid {
   margin-top: 25px;
-  min-width: 450px;
 }
 
 .keyboardRow {
@@ -60,13 +58,13 @@
 
 .key {
   border: 1px solid #fff;
-  border-radius: 3px;
+  border-radius: 5px;
   display: flex;
   min-height: 6vh;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  background-color: #444;
+  font-size: 2rem;
+  background-color: #212121;
   cursor: pointer;
 }
 
@@ -79,11 +77,66 @@
   height: 30px;
 }
 
+@keyframes shake {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  10%,
+  90% {
+    transform: translate3d(-3px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(4px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-6px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(6px, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes flip {
+  0% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    background: white;
+    transform: scaleY(0);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.shake {
+  animation: shake 1s ease-out both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.flip {
+  animation: flip 750ms ease forwards;
+}
+
 @media screen and (max-width: 600px) {
   .guessGrid {
-    min-width: 100%;
+    max-width: 100%;
   }
   .keyboardGrid {
-    min-width: 100%;
+    max-width: 100%;
+  }
+  .key {
+    font-size: 1.5rem;
   }
 }

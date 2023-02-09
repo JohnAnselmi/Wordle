@@ -12,6 +12,7 @@ type State = {
   wrongLetters: string[]
   correctLetters: string[]
   closeLetters: string[]
+  remainingLetters: string[]
   status: 'playing' | 'won' | 'lost' | 'checking'
   error: string | null
 }
@@ -28,9 +29,12 @@ const GameContext = createContext<{ state: State; dispatch: Dispatch } | undefin
 function gameReducer(state: State, action: Actions): any {
   switch (action.type) {
     case 'setWord': {
+      const theWord = words[Math.floor(Math.random() * words.length)]
+      const remainingLetters = theWord.split('')
       return {
         ...state,
-        theWord: words[Math.floor(Math.random() * words.length)],
+        theWord,
+        remainingLetters,
       }
     }
     case 'setStatus': {
@@ -64,6 +68,12 @@ function gameReducer(state: State, action: Actions): any {
       let newPastGuesses = state.pastGuesses
       let guess = state.currentGuess.join('')
       if (state.currentGuess.length !== 5) {
+        const guess = document.querySelector(`.guess${state.pastGuesses.length + 1}`)
+        guess?.classList.remove('shake')
+        guess?.classList.add('shake')
+        setTimeout(() => {
+          guess?.classList.remove('shake')
+        }, 1000)
         return {
           ...state,
           error: 'You must guess a 5 letter word',
@@ -71,6 +81,12 @@ function gameReducer(state: State, action: Actions): any {
         }
       }
       if (!words.includes(guess.toLowerCase())) {
+        const guess = document.querySelector(`.guess${state.pastGuesses.length + 1}`)
+        guess?.classList.remove('shake')
+        guess?.classList.add('shake')
+        setTimeout(() => {
+          guess?.classList.remove('shake')
+        }, 1000)
         return {
           ...state,
           error: 'You must guess a valid word',
@@ -79,26 +95,44 @@ function gameReducer(state: State, action: Actions): any {
       }
 
       const letters = document.querySelectorAll(`.guess${state.pastGuesses.length + 1} .letter`)
+      const interval = 400
+      let promise = Promise.resolve()
       letters.forEach((letter, index) => {
-        if (letter.textContent?.toLowerCase() === state.theWord[index].toLowerCase()) {
-          letter.classList.add('correct')
-          if (!state.correctLetters.includes(letter.textContent)) {
-            state.correctLetters.push(letter.textContent)
+        promise = promise.then(() => {
+          if (letter.textContent?.toLowerCase() === state.theWord[index].toLowerCase()) {
+            letter.classList.add('flip')
+            letter.classList.add('correct')
+            if (!state.correctLetters.includes(letter.textContent)) {
+              state.correctLetters.push(letter.textContent)
+            }
+            if (state.remainingLetters.includes(letter.textContent.toLowerCase())) {
+              const newRemaining = state.remainingLetters.filter(
+                (l) => l !== letter.textContent?.toLowerCase()
+              )
+              state.remainingLetters = newRemaining
+            }
+          } else if (
+            letter.textContent &&
+            state.theWord.toLowerCase().includes(letter.textContent.toLowerCase()) &&
+            state.remainingLetters.includes(letter.textContent.toLowerCase())
+          ) {
+            letter.classList.add('flip')
+            letter.classList.add('close')
+            if (!state.closeLetters.includes(letter.textContent)) {
+              state.closeLetters.push(letter.textContent)
+            }
+          } else {
+            letter.classList.add('flip')
+            letter.classList.add('wrong')
+            if (letter.textContent && !state.wrongLetters.includes(letter.textContent)) {
+              state.wrongLetters.push(letter.textContent)
+            }
           }
-        } else if (
-          letter.textContent &&
-          state.theWord.toLowerCase().includes(letter.textContent.toLowerCase())
-        ) {
-          letter.classList.add('close')
-          if (!state.closeLetters.includes(letter.textContent)) {
-            state.closeLetters.push(letter.textContent)
-          }
-        } else {
-          letter.classList.add('wrong')
-          if (letter.textContent && !state.wrongLetters.includes(letter.textContent)) {
-            state.wrongLetters.push(letter.textContent)
-          }
-        }
+
+          return new Promise((resolve) => {
+            setTimeout(resolve, interval)
+          })
+        })
       })
 
       if (guess.toUpperCase() === state.theWord.toUpperCase()) {
@@ -116,6 +150,7 @@ function gameReducer(state: State, action: Actions): any {
             pastGuesses: newPastGuesses,
             status: 'lost',
             currentGuess: guess,
+            error: `You lost! The word was ${state.theWord}`,
           }
         } else {
           return {

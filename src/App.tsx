@@ -1,6 +1,5 @@
-import { createContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { words } from './utils/words'
 import Loading from './components/Loading'
 import Keyboard from './components/Keyboard'
 import Guesses from './components/Guesses'
@@ -21,11 +20,11 @@ function App() {
     if (state.theWord !== '') {
       setLoading(false)
     }
-    console.log('word is', state.theWord)
   }, [state.theWord])
 
   useEffect(() => {
     if (state.error) {
+      if (state.error.startsWith('You lost')) return
       setTimeout(() => {
         dispatch({ type: 'clearError' })
       }, 4000)

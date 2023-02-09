@@ -15,7 +15,6 @@ export default function Key({ letter, onClick }: { letter: string; onClick: (let
   }, [letter])
 
   useEffect(() => {
-    console.log('changed letter status')
     if (state.correctLetters.includes(letter)) {
       setLetterStatus('correct')
     } else if (state.closeLetters.includes(letter)) {

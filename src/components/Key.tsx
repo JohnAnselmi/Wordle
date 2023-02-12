@@ -28,8 +28,14 @@ export default function Key({ letter, onClick }: { letter: string; onClick: (let
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toUpperCase() === letter.toUpperCase()) {
+      if (e.key === 'Backspace' && letter === 'backspace') {
         onClick(letter)
+      } else if (e.key === 'Enter' && letter === 'return') {
+        onClick(letter)
+      } else {
+        if (e.key.toUpperCase() === letter.toUpperCase()) {
+          onClick(letter)
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
